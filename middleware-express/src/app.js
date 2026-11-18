@@ -1,5 +1,5 @@
 const express = require('express');
-const { PORT } = require('./config/index');
+const { PORT } = require('./config/config');
 const app = express();
 const reportRoutes = require('./routes/reportRoutes');
 app.use(express.json());

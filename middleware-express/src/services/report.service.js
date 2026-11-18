@@ -1,4 +1,4 @@
-const BASE_URL = require('../config/index').SPRING_URL;
+const BASE_URL = require('../config/config').SPRING_URL;
 
 async function getReports(){
     const response = await fetch(`${BASE_URL}/reports`);
