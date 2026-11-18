@@ -30,9 +30,10 @@ import com.examenii.reports.components.Alert
 import com.examenii.reports.components.PickDate
 import com.examenii.reports.components.Select
 import com.examenii.reports.domain.Report
+import com.examenii.reports.utils.companyNames
 import com.examenii.reports.utils.errorReader
+import com.examenii.reports.utils.types
 import kotlinx.coroutines.launch
-import java.util.Dictionary
 
 @Composable
 fun ReportForm(
@@ -50,20 +51,20 @@ fun ReportForm(
     var error by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    val companyNames = listOf("Tracasa", "Buses Caribeños", "HEBA", "TRACOPA", "SACSA", "LUMACA", "MEPE", "Tica Bus")
-    val types = listOf("Queja","Sugerencia" , "Objeto perdido")
-    val typeLabels = hashMapOf(
-        "Queja" to "COMPLAINT",
-        "Sugerencia" to "SUGGESTION",
-        "Objeto perdido" to "LOSTITEM"
-    )
+
+
 
 
 
     AlertDialog(onDismissRequest = close,
-        title = {Text(text = if (report != null) "Nuevo reporte" else "Editar reporte")},
+        title = {Text(text = if (report == null) "Nuevo reporte" else "Editar reporte")},
         text = {
+
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                if (error != ""){
+                    Text(text = error, color = Color.Red, modifier = Modifier.padding(bottom = 30.dp))
+                }
+
                 OutlinedTextField(
                     value = name,
                     onValueChange = {text -> name = text},
@@ -100,20 +101,25 @@ fun ReportForm(
                     tripDate,
                     {text -> tripDate = text}
                 )
-                if (error != ""){
-                    Text(text = error, color = Color.Red, modifier = Modifier.padding(bottom = 30.dp))
-                }
+
             }
 
         },
         confirmButton = {
-            val typeCode = typeLabels[type]
             Button(onClick = {
-                val data = Report(
+                val validType =
+                    if (type == "Queja"){
+                    "COMPLAINT"
+                }else if(type == "Sugerencia"){
+                    "SUGGESTION"
+                }else {
+                        "LOSTITEM"
+                    }
+                    val data = Report(
                     id = report?.id ?: 0,
                     companyName = companyName,
                     passengerName = name,
-                    type = typeCode ?: "",
+                    type = validType,
                     isUrgent = true,
                     subject = subject,
                     pictureURL = "test",
@@ -123,7 +129,7 @@ fun ReportForm(
                 )
                 scope.launch {
                     try {
-                        var response = if (report == null) {
+                        val response = if (report == null) {
                             Api.service.registerReport(data)
                         }else {
                             Api.service.updateReport(data.id, data)

@@ -57,7 +57,7 @@ public class ReportJpaService implements IReportService{
         r.setSubject(req.subject());
         r.setDescription(req.description());
         r.setTripDate(LocalDate.parse(req.tripDate()));
-        
+        r.setIsUrgent(req.isUrgent());
         return toResponse(repo.save(r));
     }
 
@@ -94,7 +94,7 @@ public class ReportJpaService implements IReportService{
                 r.getDescription(),
                 r.getTripDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 r.getIsUrgent(),
-                r.getCreatedAt().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString()
+                r.getCreatedAt().toString()
         );
      
     

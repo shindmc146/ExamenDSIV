@@ -9,10 +9,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.examenii.reports.domain.Report
+import com.examenii.reports.utils.typeToLabels
 
 @Composable
 fun ReportCard(
@@ -20,23 +22,32 @@ fun ReportCard(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 12.dp))
     {
-        Text(text = report.companyName)
-        Text(text = report.passengerName)
-        Text(text = report.type)
-        Text(text = report.isUrgent.toString())
-        Text(text = report.subject)
-        Text(text = report.tripDate)
-        Text(text = report.description)
-        Text(text = report.createdAt)
-
-        Row() {
-            Button(onClick = onEdit) {
-                Text(text = "Editar")
+        Column(modifier = Modifier.padding(16.dp)){
+            Text(text = "Empresa: " + report.companyName)
+            Text(text = "Pasajero: "+ report.passengerName)
+            Text(text = "Tipo de reporte: " + typeToLabels[report.type])
+            if (report.isUrgent){
+                Text(text = "Urgente: Sí")
+            }else {
+                Text(text = "Urgente: No")
             }
-            Button(onClick = onDelete) {
-                Text(text = "Eliminar", color = Color.Red)
+
+            Text(text = "Asunto: "+report.subject)
+            Text(text = "Fecha del viaje: "+report.tripDate)
+            Text(text = "Descripción" + report.description)
+            Text(text = "Fecha de envío: " + report.createdAt)
+
+            Row(modifier = Modifier.padding(top = 12.dp)) {
+                Button(onClick = onEdit) {
+                    Text(text = "Editar")
+                }
+                Button(onClick = onDelete) {
+                    Text(text = "Eliminar", color = Color.Red)
+                }
             }
         }
     }

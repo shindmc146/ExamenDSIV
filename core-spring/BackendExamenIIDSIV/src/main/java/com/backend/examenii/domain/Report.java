@@ -36,7 +36,7 @@ public class Report {
     @Column(name="type", columnDefinition="ENUM('COMPLAINT','LOSTITEM','SUGGESTION')", nullable=false)
     private String type;
     
-    @Column(name="status",nullable=false)
+    @Column(name="urgent",nullable=false)
     private Boolean isUrgent;
     
     @Column(nullable=false)

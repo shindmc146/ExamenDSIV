@@ -60,6 +60,10 @@ function validateReport(data) {
     if (subject.trim().length < 5) {
         return { error: "El asunto debe tener al menos 5 caracteres." };
     }
+    if (hasNumber(subject)){
+        return {error: "El asunto no puede contener números"};
+
+    }
 
     if (description.trim().length < 10) {
         return { error: "La descripción debe tener al menos 10 caracteres." };
@@ -142,12 +146,12 @@ function validDate(text){
         
 
 
-        if (Number(month) && (Number(month) >= 12 || Number(month) <= 0)) {
+        if (Number(month) && (Number(month) > 12 || Number(month) <= 0)) {
             return "Mes inválido.";
         }
         const currentYear = new Date().getFullYear();
-        if (Number(year) && (Number(year) > currentYear || Number(year) < 1900)) {
-            return "Año inválido.";
+        if (Number(year) < 1970) {
+            return "No se permiten años anteriores a 1970.";
         }
         if (Number(year) < currentYear - 5){
             return "El año no puede ser anterior a 5 años atrás.";

@@ -103,11 +103,12 @@ fun PickDate(title: String, date: String, onConfirm: (String) -> Unit){
 }
 
 @Composable
-fun Alert(text: String){
+fun Alert(text: String, color: Color){
     if (text != ""){
         Text(
             text=text,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = color
         )
     }
 }

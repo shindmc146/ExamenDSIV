@@ -2,7 +2,9 @@ package com.examenii.reports.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -16,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +32,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ReportScreen(){
     var reports by remember { mutableStateOf<List<Report>>(emptyList()) }
-    var message by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
     var reload by remember { mutableStateOf(0) }
 
     var creatingReport by remember { mutableStateOf(false) }
@@ -41,21 +45,23 @@ fun ReportScreen(){
         try {
             reports = Api.service.getReports()
         }catch (e: Exception){
-            message = "Error al obtener los reportes ${e.message}"
+            errorMessage = "Error al obtener los reportes ${e.message}"
         }
     }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Row(modifier = Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(top = 12.dp).fillMaxWidth(), ) {
             Text(text = "Reportes",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(12.dp)
             )
-            Button(onClick = {creatingReport=true}) {
-                Text(text = "Hacer Reporte")
+            Button(onClick = {creatingReport=true}, modifier = Modifier.padding(start = 12.dp)) {
+                Text(text = "Nuevo Reporte")
             }
-            Alert(message)
-
+        }
+            Alert(successMessage, Color.Green)
+            Alert(text = errorMessage, Color.Red);
             if (reports.isEmpty()){
                 Text(text = "No hay reportes aún")
             }
@@ -75,7 +81,7 @@ fun ReportScreen(){
                     close = {creatingReport = false},
                     save = {
                         creatingReport = false
-                        message = "Se envió el reporte correctamente"
+                        successMessage = "Reporte enviado correctamente correctamente"
                         reload += 1
                     }
                 )
@@ -86,7 +92,7 @@ fun ReportScreen(){
                     close = {reportForEdit = null},
                     save = {
                         reportForEdit = null
-                        message = "Se actualizó el reporte correctamente"
+                        successMessage = "Se actualizó el reporte correctamente"
                         reload += 1
                     }
                 )
@@ -97,23 +103,24 @@ fun ReportScreen(){
                 ConfirmAlert(
                     message= "¿Está seguro que desea borrar el reporte?",
                     onConfirm = {
+                        reportForDelete = null;
                         scope.launch {
                             try {
                                 val response = Api.service.deleteReport(reportToDelete.id)
                                 if (response.isSuccessful){
-                                    message = "Se eliminó el reporte correctamente"
+                                    successMessage = "Se eliminó el reporte correctamente"
                                     reload += 1
                                 }else {
-                                    message = errorReader(response)
+                                    errorMessage = errorReader(response)
                                 }
                             }catch (e: Exception){
-                                message = "Error al borrar el curso: ${e.message}"
+                                errorMessage = "Error al borrar el curso: ${e.message}"
                             }
                         }
                     },
                     onCancel = {reportForDelete = null}
                 )
             }
-        }
+
     }
 }
