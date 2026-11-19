@@ -1,21 +1,21 @@
 const MANDATORY_FIELDS = {
-    companyName: "El nombre de la empresa es obligatorio",
     passengerName: "El nombre del pasajero es obligatorio",
+    companyName: "El nombre de la empresa es obligatorio",
     type: "El tipo es obligatorio",
-    subject: "El asunto es obligatorio",
-    pictureURL: "La URL de la imagen es obligatoria",
-    tripDate: "La fecha de viaje es obligatoria",
+    subject: "El asunto es obligatorio",    
     description: "La descripción es obligatoria",
+    tripDate: "La fecha de viaje es obligatoria",
+    pictureURL: "La imagen es obligatoria"
 }
 
 const FIELD_LABELS = {
-    companyName: "El nombre de empresa",
     passengerName: "El nombre de pasajero",
+    companyName: "El nombre de empresa",
     type: "El tipo",
     subject: "El asunto",
-    pictureURL: "La URL de la imagen",
-    tripDate: "La fecha",
     description: "La descripción",
+    tripDate: "La fecha",
+    pictureURL: "La imagen"
 }
 
 const VALID_TYPES = ["COMPLAINT", "LOSTITEM", "SUGGESTION"];
@@ -53,6 +53,10 @@ function validateReport(data) {
         return { error: "El nombre del pasajero no puede tener números." };
     }
 
+    if (!onlyLetters(name)){
+        return {error: "Nombre inválido, solo se permiten letras"}
+    }
+
     if (!VALID_TYPES.includes(type)) {
         return { error: "Tipo inválido." };
     }
@@ -62,7 +66,9 @@ function validateReport(data) {
     }
     if (hasNumber(subject)){
         return {error: "El asunto no puede contener números"};
-
+    }
+    if (!onlyLetters(subject)){
+        return {error: "Asunto inválido, solo se permiten letras"}
     }
 
     if (description.trim().length < 10) {
@@ -176,11 +182,30 @@ function onlyNumbers(text) {
 }
 
 
+function onlyLetters(text){
+    for(let i = 0; i<text.length; i++){
+        if (!isValidChar(text[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
 
 
 function isNumber(num) {
     return num >= "0" && num <= "9";
 
+
+}
+function isValidChar(letter){
+    valid = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ "
+    for(let i = 0; i<valid.length; i++){
+        if (letter === valid[i]){
+            return true;
+        }
+    }
+    return false;
 }
 
 

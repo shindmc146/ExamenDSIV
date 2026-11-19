@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.examenii.reports.domain.Report
+import com.examenii.reports.utils.dbDateToNormalFormat
 import com.examenii.reports.utils.typeToLabels
 
 @Composable
@@ -38,8 +39,8 @@ fun ReportCard(
 
             Text(text = "Asunto: "+report.subject)
             Text(text = "Fecha del viaje: "+report.tripDate)
-            Text(text = "Descripción" + report.description)
-            Text(text = "Fecha de envío: " + report.createdAt)
+            Text(text = "Descripción: " + report.description)
+            Text(text = "Fecha de envío: " + dbDateToNormalFormat(report.createdAt))
 
             Row(modifier = Modifier.padding(top = 12.dp)) {
                 Button(onClick = onEdit) {

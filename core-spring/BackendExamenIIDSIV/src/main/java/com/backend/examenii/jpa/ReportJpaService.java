@@ -9,6 +9,9 @@ import com.backend.examenii.dto.ReportRequest;
 import com.backend.examenii.dto.ReportResponse;
 import com.backend.examenii.repository.IReportRepository;
 import com.backend.examenii.service.IReportService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -69,7 +72,10 @@ public class ReportJpaService implements IReportService{
         r.setPassengerName(req.passengerName());
         r.setType(req.type());
         r.setSubject(req.subject());
-        r.setPictureURL(req.pictureURL());
+        if (r.getPictureURL() != req.pictureURL()){
+            deletePhoto(r.getPictureURL());
+            r.setPictureURL(req.pictureURL());
+        }
         r.setDescription(req.description());
         r.setTripDate(LocalDate.parse(req.tripDate()));
         r.setIsUrgent(req.isUrgent());
@@ -78,8 +84,19 @@ public class ReportJpaService implements IReportService{
 
     @Override
     public void delete(Integer id) {
-        repo.findById(id).orElseThrow(() -> error(HttpStatus.NOT_FOUND, "El reporte no existe"));
+        Report r = repo.findById(id).orElseThrow(() -> error(HttpStatus.NOT_FOUND, "El reporte no existe"));
+        deletePhoto(r.getPictureURL());
         repo.deleteById(id);
+        
+    }
+    
+    private void deletePhoto(String picUrl){
+       try{
+            Path path = ImageService.UPLOAD_DIRECTORY.resolve(picUrl);
+            Files.deleteIfExists(path);
+        }catch(IOException e){
+            System.err.println("Error al borrar la foto "+e.getMessage());
+        }  
     }
     
     

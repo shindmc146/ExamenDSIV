@@ -81,7 +81,7 @@ fun ReportScreen(){
                     close = {creatingReport = false},
                     save = {
                         creatingReport = false
-                        successMessage = "Reporte enviado correctamente correctamente"
+                        successMessage = "Reporte enviado correctamente"
                         reload += 1
                     }
                 )

@@ -7,7 +7,7 @@ data class Report(
     val type: String,
     val isUrgent: Boolean,
     val subject: String,
-    val pictureURL: String,
+    val pictureURL: String?,
     val tripDate: String,
     val description: String,
     val createdAt: String

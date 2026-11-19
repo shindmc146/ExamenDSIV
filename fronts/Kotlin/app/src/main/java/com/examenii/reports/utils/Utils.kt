@@ -1,5 +1,6 @@
 package com.examenii.reports.utils
 
+import com.examenii.reports.domain.ImageResponse
 import com.google.gson.Gson
 import retrofit2.Response
 import java.text.SimpleDateFormat
@@ -20,6 +21,17 @@ fun errorReader(response: Response<Unit>): String{
 
 
 }
+
+fun errorImageReader(response: Response<ImageResponse>): String{
+    val errorString = response.errorBody()?.string()
+
+    return try {
+        val errorResponse = Gson().fromJson(errorString, ErrorResponse::class.java)
+        errorResponse.error;
+    }catch (e: Exception){
+        return "Error parseando el error ${e.message}"
+    }
+}
 fun milisecondsToText(miliseconds: Long) : String{
     val format = SimpleDateFormat("dd-MM-yyyy")
     format.timeZone = TimeZone.getTimeZone("UTC-6")
@@ -33,3 +45,24 @@ val typeToLabels = hashMapOf(
     "SUGGESTION" to "Sugerencia",
     "LOSTITEM" to "Objeto perdido"
 )
+
+fun normalDateToDbFormat(date: String): String{
+    val data = date.split("-")
+    if (data.size != 3){
+        return "";
+    }
+    val day = data[0]
+    val month = data[1]
+    val year = data[2]
+    return "$year-$month-$day";
+}
+fun dbDateToNormalFormat(date: String):String{
+    val data = date.split("-")
+    if (data.size != 3){
+        return "";
+    }
+    val day = data[2]
+    val month = data[1]
+    val year = data[0]
+    return "$day-$month-$year"
+}

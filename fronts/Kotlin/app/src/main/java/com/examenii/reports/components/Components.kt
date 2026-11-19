@@ -1,6 +1,12 @@
 package com.examenii.reports.components
 
 import android.app.DatePickerDialog
+import android.net.Uri
+import android.widget.Button
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +18,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,13 +34,13 @@ import androidx.compose.ui.unit.dp
 import com.examenii.reports.utils.milisecondsToText
 
 @Composable
-fun Select(title: String, text: String, options: List<String>,onClick: (Int) -> Unit){
+fun Select(title: String, text: String?, options: List<String>,onClick: (Int) -> Unit){
     var open by remember { mutableStateOf(false) };
     Text(text= title, modifier = Modifier.padding(top = 12.dp,bottom = 4.dp ))
 
     Box{
         OutlinedButton(onClick = {open = true}, modifier = Modifier.fillMaxWidth()) {
-            Text(text)
+            Text(text ?: "")
         }
         DropdownMenu(expanded = open, onDismissRequest = {open = false}) {
             for (pos in options.indices){
@@ -101,6 +108,24 @@ fun PickDate(title: String, date: String, onConfirm: (String) -> Unit){
         }
     }
 }
+@Composable
+fun ImagePicker(title: String, onImageSelected: (Uri) -> Unit){
+    Text(text = title)
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) {uri ->
+        if (uri != null) {
+            onImageSelected(uri)
+        }
+    }
+    Button(onClick = {
+        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }){
+        Text(text = "Seleccionar imagen")
+    }
+}
+
 
 @Composable
 fun Alert(text: String, color: Color){
