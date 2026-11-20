@@ -53,7 +53,8 @@ onMounted(async () => {
         <label>Fecha del viaje</label><br>
         <input type="date" v-model="form.tripDate" /><br>
 
-
+        <label>Urgente</label>
+        <input type="checkbox" v-model="form.isUrgent"><br>
 
         <label>Descipción</label><br>
         <textarea v-model="form.description"></textarea><br>
