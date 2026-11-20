@@ -6,8 +6,18 @@ const imageRouter = require('./routes/imageRoutes');
 const multer = require('multer');
 app.use(express.json());
 
-app.use('/api/reports', reportRoutes);
-app.use('/api/images', imageRouter);
+const ALLOWED_ORIGINS = ["http://localhost:5173"]
+app.use((req,res,next) => {
+    const origin = req.headers.origin;
+    console.log(origin)
+    if (ALLOWED_ORIGINS.includes(origin)){
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    next();
+})
 app.use((err, req, res, next) => {
     if (err.type === "entity.parse.failed"){
         return res.status(400).json({error: "Petición con JSON inválido"});
@@ -24,6 +34,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({error: "Error interno del middleware"});
     
 })
+
+app.use('/api/reports', reportRoutes);
+app.use('/api/images', imageRouter);
+
 app.listen(PORT, () => {
     console.log(`Middleware escuchando en el puerto ${PORT}`);
 });

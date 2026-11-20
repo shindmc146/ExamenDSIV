@@ -4,6 +4,7 @@
  */
 package com.backend.examenii.service;
 
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 

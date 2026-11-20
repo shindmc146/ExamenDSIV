@@ -67,6 +67,7 @@ fun ReportScreen(){
             }
 
             for (r in reports){
+                println(r.pictureURL)
                 ReportCard(
                     report = r,
                     onEdit = {reportForEdit = r},

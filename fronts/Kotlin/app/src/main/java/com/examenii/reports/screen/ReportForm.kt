@@ -41,6 +41,7 @@ import com.examenii.reports.utils.errorReader
 import com.examenii.reports.utils.normalDateToDbFormat
 import com.examenii.reports.utils.typeToLabels
 import com.examenii.reports.utils.types
+import com.examenii.reports.utils.validations.validReport
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -140,7 +141,13 @@ fun ReportForm(
 
         },
         confirmButton = {
+
             Button(onClick = {
+                error = validReport(name, companyName, type ?: "", subject, description, tripDate, uploadedFileName ?: "");
+                if (error != ""){
+                    return@Button
+                }
+
                 var fileName : String? = if (report != null) report.pictureURL else uploadedFileName;
 
                 val uri = imageUri;
@@ -195,6 +202,7 @@ fun ReportForm(
                         createdAt = ""
                     )
                     try {
+                        error = "";
                         val response = if (report == null) {
                             Api.service.registerReport(data)
                         } else {
@@ -203,6 +211,7 @@ fun ReportForm(
                         if (response.isSuccessful) {
                             imageUri = null
                             uploadedFileName = null
+
                             save();
                         } else {
                             error = errorReader(response);

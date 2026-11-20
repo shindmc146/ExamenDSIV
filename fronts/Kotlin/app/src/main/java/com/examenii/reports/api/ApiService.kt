@@ -14,20 +14,20 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
-    @GET("api/reports")
+    @GET("reports")
     suspend fun getReports(): List<Report>
 
-    @POST("api/reports")
+    @POST("reports")
     suspend fun registerReport(@Body report: Report): Response<Unit>
 
-    @PUT("api/reports/{id}")
+    @PUT("reports/{id}")
     suspend fun updateReport(@Path("id") id: Int, @Body report: Report): Response<Unit>
 
-    @DELETE("api/reports/{id}")
+    @DELETE("reports/{id}")
     suspend fun deleteReport(@Path("id") id: Int): Response<Unit>
 
     @Multipart
-    @POST("api/images")
+    @POST("images")
     suspend fun uploadImage(@Part file: MultipartBody.Part) : Response<ImageResponse>
 
 }

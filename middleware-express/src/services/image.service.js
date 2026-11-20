@@ -16,4 +16,20 @@ async function sendImage(file){
         return handleResponse(response);
 }
 
-module.exports = {sendImage}
+async function getImage(fileName){
+    const response = await fetch(`${BASE_URL}/uploads/reports/${fileName}`)
+    console.log(`${BASE_URL}/images/${fileName}`)
+    if (response.ok){
+        return {
+            status: 200,
+            contentType: response.headers.get("content-type"),
+            bytes : Buffer.from(await response.arrayBuffer())
+        }
+    }else {
+        return {status: 404, data: {error: "La imagen no existe"}}
+    }
+}
+
+
+
+module.exports = {sendImage, getImage}

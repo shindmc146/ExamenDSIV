@@ -4,10 +4,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object Api {
-    private const val URL = "http://192.168.50.249:3000/";
+    const val BASE_URL = "http://localhost:3000/api/";
 
     val service: ApiService = Retrofit.Builder()
-        .baseUrl(URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiService::class.java)
