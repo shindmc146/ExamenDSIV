@@ -21,3 +21,9 @@ export interface ReportPayload {
   isUrgent: boolean
   pictureURL: string | null
 }
+
+export const TYPE_LABELS = {
+  COMPLAINT : "Queja",
+  LOSTITEM: "Objeto perdido",
+  SUGGESTION: "Sugerencia"
+}

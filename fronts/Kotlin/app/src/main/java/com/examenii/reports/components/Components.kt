@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.examenii.reports.utils.dbDateToNormalFormat
 import com.examenii.reports.utils.milisecondsToText
 
 @Composable
@@ -80,7 +81,7 @@ fun PickDate(title: String, date: String, onConfirm: (String) -> Unit){
     Text(text = title)
 
     OutlinedButton(onClick = {open = true}) {
-        Text(text = if (date == "") "Seleccionar fecha" else date)
+        Text(text = if (date == "") "Seleccionar fecha" else dbDateToNormalFormat(date))
     }
 
     if (open){

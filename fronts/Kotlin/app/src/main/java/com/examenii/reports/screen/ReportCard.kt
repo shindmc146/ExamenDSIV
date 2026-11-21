@@ -33,14 +33,13 @@ fun ReportCard(
     {
         Column(modifier = Modifier.padding(16.dp)){
 
-            if (report.pictureURL != ""){
+            if (!report.pictureURL.isNullOrBlank()){
                 AsyncImage(
                     model = "${BASE_URL}images/${report.pictureURL}",
                     contentDescription = "Foto del reporte",
                     modifier = Modifier.fillMaxWidth().height(180.dp),
                     contentScale = ContentScale.Crop
                 )
-                println("${BASE_URL}images/${report.pictureURL}")
             }
 
             Text(text = "Empresa: " + report.companyName)
@@ -53,7 +52,7 @@ fun ReportCard(
             }
 
             Text(text = "Asunto: "+report.subject)
-            Text(text = "Fecha del viaje: "+report.tripDate)
+            Text(text = "Fecha del viaje: "+dbDateToNormalFormat(report.tripDate))
             Text(text = "Descripción: " + report.description)
             Text(text = "Fecha de envío: " + dbDateToNormalFormat(report.createdAt))
 

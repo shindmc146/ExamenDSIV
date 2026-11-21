@@ -6,12 +6,11 @@ import axios from 'axios'
 export function useReports(){
     const reports = ref<Report[]>([])
     const error = ref<string | null>(null)
-
-
-    const file = ref<File | null>(null)
-    const uploadedFileName = ref<string | null>(null)
+    const loading = ref(false)
 
     async function loadReports() {
+        error.value = null
+        loading.value = true
     try {
         reports.value = await reportApi.getAll()
     } catch (e) {
@@ -21,28 +20,16 @@ export function useReports(){
             error.value = 'Error al cargar los reportes'
             console.error(e)
         }
+    }finally{
+        loading.value = false
     }
 }
 
-async function handleSubmit(payload: ReportPayload) {
-    try {
-        if (file.value && !uploadedFileName.value){
-            uploadedFileName.value = await imageApi.upload(file.value)
-        }
 
-        payload.pictureURL = uploadedFileName.value
-        await reportApi.create(payload)
-        await loadReports()
-    } catch (e) {
-        if (axios.isAxiosError(e) && e.response){
-            error.value = e.response.data.error
-        }else{
-            error.value = 'Error al crear el reporte'
-            console.error(e)
-        }
-        
-    }
-}
+
+
+
+
 
 
 
@@ -64,12 +51,6 @@ async function handleSubmit(payload: ReportPayload) {
     }
 }
 
-async function onImagePick(event:Event) {
-    const input = event.target as HTMLInputElement
-    file.value = input.files?.item(0) ?? null
-    uploadedFileName.value = null;
 
-}
-
-return {reports,error, loadReports, handleSubmit, handleDelete, onImagePick}
+return {reports,error, loadReports, handleDelete}
 }

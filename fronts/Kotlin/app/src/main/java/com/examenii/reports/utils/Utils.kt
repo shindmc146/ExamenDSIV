@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 import kotlin.jvm.java
 
@@ -33,8 +34,8 @@ fun errorImageReader(response: Response<ImageResponse>): String{
     }
 }
 fun milisecondsToText(miliseconds: Long) : String{
-    val format = SimpleDateFormat("dd-MM-yyyy")
-    format.timeZone = TimeZone.getTimeZone("UTC-6")
+    val format = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    format.timeZone = TimeZone.getTimeZone("UTC")
     return format.format(Date(miliseconds))
 
 }
@@ -46,16 +47,6 @@ val typeToLabels = hashMapOf(
     "LOSTITEM" to "Objeto perdido"
 )
 
-fun normalDateToDbFormat(date: String): String{
-    val data = date.split("-")
-    if (data.size != 3){
-        return "";
-    }
-    val day = data[0]
-    val month = data[1]
-    val year = data[2]
-    return "$year-$month-$day";
-}
 fun dbDateToNormalFormat(date: String):String{
     val data = date.split("-")
     if (data.size != 3){

@@ -72,7 +72,7 @@ public class ReportJpaService implements IReportService{
         r.setPassengerName(req.passengerName());
         r.setType(req.type());
         r.setSubject(req.subject());
-        if (r.getPictureURL() != req.pictureURL()){
+        if (!r.getPictureURL().equals(req.pictureURL())){
             deletePhoto(r.getPictureURL());
             r.setPictureURL(req.pictureURL());
         }
@@ -92,7 +92,10 @@ public class ReportJpaService implements IReportService{
     
     private void deletePhoto(String picUrl){
        try{
-            Path path = ImageService.UPLOAD_DIRECTORY.resolve(picUrl);
+            Path path = ImageService.UPLOAD_DIRECTORY.resolve(picUrl).normalize();
+            if (!path.startsWith(ImageService.UPLOAD_DIRECTORY)){
+                return;
+            }
             Files.deleteIfExists(path);
         }catch(IOException e){
             System.err.println("Error al borrar la foto "+e.getMessage());
@@ -109,7 +112,7 @@ public class ReportJpaService implements IReportService{
                 r.getType(),
                 r.getSubject(),
                 r.getDescription(),
-                r.getTripDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                r.getTripDate().toString(),
                 r.getIsUrgent(),
                 r.getCreatedAt().toString()
         );

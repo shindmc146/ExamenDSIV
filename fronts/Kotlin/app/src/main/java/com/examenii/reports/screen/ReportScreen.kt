@@ -109,13 +109,16 @@ fun ReportScreen(){
                             try {
                                 val response = Api.service.deleteReport(reportToDelete.id)
                                 if (response.isSuccessful){
+                                    errorMessage = ""
                                     successMessage = "Se eliminó el reporte correctamente"
                                     reload += 1
                                 }else {
+                                    successMessage = ""
                                     errorMessage = errorReader(response)
                                 }
                             }catch (e: Exception){
-                                errorMessage = "Error al borrar el curso: ${e.message}"
+                                successMessage  = ""
+                                errorMessage = "Error al borrar el reporte: ${e.message}"
                             }
                         }
                     },

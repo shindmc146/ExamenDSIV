@@ -17,8 +17,8 @@ async function sendImage(file){
 }
 
 async function getImage(fileName){
+    console.log(fileName)
     const response = await fetch(`${BASE_URL}/uploads/reports/${fileName}`)
-    console.log(`${BASE_URL}/images/${fileName}`)
     if (response.ok){
         return {
             status: 200,

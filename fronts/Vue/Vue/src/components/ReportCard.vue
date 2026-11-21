@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { Report } from '@/schema/report.types';
 import { imageUrl } from '@/config/http';
+import { normalDate } from '@/utils/changeDateFormat';
+import { TYPE_LABELS } from '@/schema/report.types';
 
 defineProps<{
     report: Report
 }>()
 defineEmits<{
-    edit: [id: number, payload: Report]
+    edit: [id: number]
     delete: [id: number]
 }>()
 
@@ -20,12 +22,13 @@ defineEmits<{
         <h2>{{ "Asunto: " + report.subject }}</h2>
         <p>{{ "Pasajero: " + report.passengerName }}</p>
         <p>{{ "Empresa: " + report.companyName }}</p>
-        <p>{{ "Tipo: " + report.type }}</p>
+        <p>{{ "Tipo: " + TYPE_LABELS[report.type] }}</p>
         <p>{{ "Urgente: " + (report.isUrgent ? "Sí" : "No") }}</p>
-        <p>{{ "Fecha del viaje: " + report.tripDate }}</p>
-        <p>{{ "Fecha de envío: " + report.createdAt }}</p>
+        <p>{{ "Fecha del viaje: " + normalDate(report.tripDate) }}</p>
+        <p>{{ "Fecha de envío: " + normalDate(report.createdAt) }}</p>
+        <p>{{ "Descripción: " + report.description }}</p>
 
-        <button @click="$emit('edit', report.id, report)">Editar</button>
+        <button @click="$emit('edit', report.id)">Editar</button>
         <button @click="$emit('delete', report.id)">Borrar</button>
     </article>
 </template>

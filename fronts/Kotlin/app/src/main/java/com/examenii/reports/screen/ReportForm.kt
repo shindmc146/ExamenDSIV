@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -38,7 +39,6 @@ import com.examenii.reports.domain.Report
 import com.examenii.reports.utils.companyNames
 import com.examenii.reports.utils.errorImageReader
 import com.examenii.reports.utils.errorReader
-import com.examenii.reports.utils.normalDateToDbFormat
 import com.examenii.reports.utils.typeToLabels
 import com.examenii.reports.utils.types
 import com.examenii.reports.utils.validations.validReport
@@ -114,17 +114,23 @@ fun ReportForm(
                     label = { Text(text = "Asunto") },
                     maxLines = 1
                 )
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { text -> description = text },
-                    label = { Text(text = "Descripción") },
-                    maxLines = 1
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "Urgente")
+                    Checkbox(checked = isUrgent, onCheckedChange = {isChecked -> isUrgent = isChecked})
+                }
+
                 PickDate(
                     title = "Fecha del viaje",
                     tripDate,
                     { text -> tripDate = text }
                 )
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { text -> description = text },
+                    label = { Text(text = "Descripción") },
+                    minLines = 3
+                )
+
 
                 ImagePicker(
                     title = "Foto relacionada",
@@ -197,7 +203,7 @@ fun ReportForm(
                         isUrgent = isUrgent,
                         subject = subject,
                         pictureURL = fileName,
-                        tripDate = normalDateToDbFormat(tripDate),
+                        tripDate = tripDate,
                         description = description,
                         createdAt = ""
                     )
